@@ -94,7 +94,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 3a85e1a62072b8f4b8a6ea48df9af26d,
+    type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 8cc1fb19bb59c6743b5f9af590aa3e4f,
     type: 2}
 --- !u!196 &4
@@ -1186,6 +1187,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: <Group Name>
+      objectReference: {fileID: 0}
+    - target: {fileID: 4785387360392473369, guid: 77ac6b10722bcca4a8baf70e44d89e78,
+        type: 3}
+      propertyPath: m_overflowMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4785387360392473369, guid: 77ac6b10722bcca4a8baf70e44d89e78,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
       objectReference: {fileID: 0}
     - target: {fileID: 4800508294263982830, guid: 77ac6b10722bcca4a8baf70e44d89e78,
         type: 3}
