@@ -21,12 +21,13 @@ public class Ghostify : NetworkBehaviour
         base.OnNetworkSpawn();
         // if (IsHost && IsOwner)
         Debug.Log("Ghostify OnNetworkSpawn" + OwnerClientId);
-        if (OwnerClientId == 0) // Si es el host
+        //if (OwnerClientId == 0) // Si es el host
+        //{
+
+        //}
+        foreach (var renderer in renderers)
         {
-            foreach (var renderer in renderers)
-            {
-                renderer.enabled = false;
-            }
+            renderer.enabled = false;
         }
     }
 

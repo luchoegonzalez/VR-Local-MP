@@ -241,6 +241,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25f7d6f3d19b0524d9be4bc50efbc19a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
+  AuthorityMode: 0
+  TickSyncChildren: 0
   UseUnreliableDeltas: 0
   SyncPositionX: 1
   SyncPositionY: 1
@@ -258,6 +272,7 @@ MonoBehaviour:
   UseQuaternionCompression: 0
   UseHalfFloatPrecision: 0
   InLocalSpace: 0
+  SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
   isServerAuthoritative: 0
@@ -307,6 +322,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25f7d6f3d19b0524d9be4bc50efbc19a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
+  AuthorityMode: 0
+  TickSyncChildren: 0
   UseUnreliableDeltas: 0
   SyncPositionX: 1
   SyncPositionY: 1
@@ -324,6 +353,7 @@ MonoBehaviour:
   UseQuaternionCompression: 0
   UseHalfFloatPrecision: 0
   InLocalSpace: 0
+  SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
   isServerAuthoritative: 0
@@ -381,8 +411,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1874537550
+  GlobalObjectIdHash: 1795334012
   InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -390,6 +422,8 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!114 &4950753110966121755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -402,10 +436,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c156e0102a8d0514b91acc63faadec62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   head: {fileID: 7784919235243739335}
   leftHand: {fileID: 1523342480417178809}
   rightHand: {fileID: 908897919254213233}
   m_UpdateObjectName: 1
+  m_HeadRends: []
   m_handsObjects:
   - {fileID: 4642310900114525791}
   - {fileID: 4269012277223116051}
@@ -479,6 +515,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79af78f95e61cdd458d2f24b1a8356fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   m_FidelityLevel: 0
   m_MinUpdateDelta: 0.1
   m_HandCurler:
@@ -666,6 +703,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25f7d6f3d19b0524d9be4bc50efbc19a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
+  AuthorityMode: 0
+  TickSyncChildren: 0
   UseUnreliableDeltas: 0
   SyncPositionX: 1
   SyncPositionY: 1
@@ -683,6 +734,7 @@ MonoBehaviour:
   UseQuaternionCompression: 0
   UseHalfFloatPrecision: 0
   InLocalSpace: 0
+  SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
   isServerAuthoritative: 0
@@ -702,7 +754,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4766829087946068498
 Transform:
   m_ObjectHideFlags: 0
@@ -730,6 +782,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adaf187dab5efa14db97edfa16271312, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   renderers:
   - {fileID: 5915267321722912462}
   - {fileID: 147406205841549104}
@@ -1233,27 +1286,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -4396642182433536433, guid: 11aa239aa004f41ffaf96def6065ff4c,
         type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: e5f888eafcd605f4aa2bd6a3276635f6, type: 2}
     - target: {fileID: -4396642182433536433, guid: 11aa239aa004f41ffaf96def6065ff4c,
         type: 3}
-      propertyPath: m_Materials.Array.data[1]
+      propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: 0807b6af019371c44996032bdb49e789, type: 2}
     - target: {fileID: -4396642182433536433, guid: 11aa239aa004f41ffaf96def6065ff4c,
         type: 3}
-      propertyPath: m_Materials.Array.data[2]
+      propertyPath: 'm_Materials.Array.data[2]'
       value: 
       objectReference: {fileID: 2100000, guid: 166f93402155cdc40a8c63646175b02a, type: 2}
     - target: {fileID: -4396642182433536433, guid: 11aa239aa004f41ffaf96def6065ff4c,
         type: 3}
-      propertyPath: m_Materials.Array.data[3]
+      propertyPath: 'm_Materials.Array.data[3]'
       value: 
       objectReference: {fileID: 2100000, guid: 9415889c1c4b44c4280017fa52792b98, type: 2}
     - target: {fileID: -4396642182433536433, guid: 11aa239aa004f41ffaf96def6065ff4c,
         type: 3}
-      propertyPath: m_Materials.Array.data[4]
+      propertyPath: 'm_Materials.Array.data[4]'
       value: 
       objectReference: {fileID: 2100000, guid: 886c8b01ca389e44da95036f273e1404, type: 2}
     - target: {fileID: -1839151259086666497, guid: 11aa239aa004f41ffaf96def6065ff4c,
@@ -1263,12 +1316,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -1839151259086666497, guid: 11aa239aa004f41ffaf96def6065ff4c,
         type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: db35a484c41fd3e4a80269d651d0084c, type: 2}
     - target: {fileID: -1839151259086666497, guid: 11aa239aa004f41ffaf96def6065ff4c,
         type: 3}
-      propertyPath: m_Materials.Array.data[1]
+      propertyPath: 'm_Materials.Array.data[1]'
       value: 
       objectReference: {fileID: 2100000, guid: 46f10b6b79000b24c8eb08930a082a08, type: 2}
     - target: {fileID: 919132149155446097, guid: 11aa239aa004f41ffaf96def6065ff4c,
@@ -1411,7 +1464,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 4aab437627dae914baeec6c650e48332,
         type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: baa86a78be6bc824992b86f36fb9dc8c, type: 2}
     - target: {fileID: 919132149155446097, guid: 4aab437627dae914baeec6c650e48332,
