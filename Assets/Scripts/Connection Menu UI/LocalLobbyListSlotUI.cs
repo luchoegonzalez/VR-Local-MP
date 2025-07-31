@@ -24,7 +24,7 @@ public class LocalLobbyListSlotUI : MonoBehaviour
 
     private void Awake()
     {
-        m_NetworkManager = FindObjectOfType<NetworkManagerVRMultiplayer>();
+        m_NetworkManager = FindFirstObjectByType<NetworkManagerVRMultiplayer>();
     }
 
     public void CreateLobbyUI(string lobbyIP, int lobbyPort, string lobbyName, ConnectionUI connectionUI)

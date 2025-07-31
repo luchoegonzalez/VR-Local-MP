@@ -60,7 +60,7 @@ public class SimpleStep : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     private void CompleteStepRpc(RpcParams rpcParams = default)
     {
-        float timeTaken = FindObjectOfType<TimeTracker>().GetTimeElapsed();
+        float timeTaken = FindFirstObjectByType<TimeTracker>().GetTimeElapsed();
         ulong senderClientId = rpcParams.Receive.SenderClientId;
         this.stepData.Complete(timeTaken, senderClientId);
 

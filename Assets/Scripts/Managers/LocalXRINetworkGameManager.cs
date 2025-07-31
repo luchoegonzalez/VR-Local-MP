@@ -18,7 +18,7 @@ public class LocalXRINetworkGameManager : XRINetworkGameManager
         {
             if (_instance == null)
             {
-                _instance = FindObjectOfType<LocalXRINetworkGameManager>();
+                _instance = FindFirstObjectByType<LocalXRINetworkGameManager>();
                 if (_instance == null)
                 {
                     GameObject singletonObject = new GameObject();
@@ -70,7 +70,7 @@ public class LocalXRINetworkGameManager : XRINetworkGameManager
 
         if (!enabled) return;
 
-        m_TimeTracker = FindObjectOfType<TimeTracker>();
+        m_TimeTracker = FindFirstObjectByType<TimeTracker>();
         startGameButton.onClick.AddListener(StartGame);
         m_DataPersistenceManager = DataPersistenceManager.Instance;
     }

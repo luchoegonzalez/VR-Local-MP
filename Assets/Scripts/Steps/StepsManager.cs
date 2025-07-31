@@ -16,7 +16,7 @@ public class StepsManager : MonoBehaviour, IDataPersistence
         {
             if (instance == null)
             {
-                instance = FindObjectOfType<StepsManager>();
+                instance = FindFirstObjectByType<StepsManager>();
                 if (instance == null)
                 {
                     GameObject singletonObject = new GameObject();
@@ -63,7 +63,7 @@ public class StepsManager : MonoBehaviour, IDataPersistence
 
     private void onGameStartedCallback()
     {
-        List<SimpleStep> simpleSteps = new List<SimpleStep>(FindObjectsOfType<SimpleStep>());
+        List<SimpleStep> simpleSteps = new List<SimpleStep>(FindObjectsByType<SimpleStep>(FindObjectsSortMode.None));
         simpleSteps.Sort((a, b) => a.GetStepNumber().CompareTo(b.GetStepNumber()));
         steps = new List<StepData>();
 

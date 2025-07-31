@@ -23,7 +23,7 @@ public class VRNetworkDiscoveryUI : MonoBehaviour
     void Awake()
     {
         Debug.Log("VRNetworkDiscoveryUI Awake");
-        m_Discovery = FindObjectOfType<VRNetworkDiscovery>();
+        m_Discovery = FindFirstObjectByType<VRNetworkDiscovery>();
         m_NetworkManager = GetComponent<NetworkManager>();
         m_ConnectionUI = GetComponent<ConnectionUI>();
         m_Discovery.OnServerFound.AddListener(OnServerFound);

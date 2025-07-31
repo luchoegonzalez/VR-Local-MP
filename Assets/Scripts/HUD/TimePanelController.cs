@@ -7,7 +7,7 @@ public class TimePanelController : IPanelController
 
     private void Start()
     {
-        timeTracker = FindObjectOfType<TimeTracker>();
+        timeTracker = FindFirstObjectByType<TimeTracker>();
         if (timeText == null || timeTracker == null)
         {
             Debug.LogError("TimePanelController: Missing references");

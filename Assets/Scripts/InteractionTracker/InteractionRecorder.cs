@@ -25,7 +25,7 @@ public class InteractionRecorder : MonoBehaviour, IDataPersistence
         {
             if (_instance == null)
             {
-                _instance = FindObjectOfType<InteractionRecorder>();
+                _instance = FindFirstObjectByType<InteractionRecorder>();
 
                 if (_instance == null)
                 {

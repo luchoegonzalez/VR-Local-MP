@@ -11,7 +11,7 @@ public class HUDController : MonoBehaviour
 
     private void Start()
     {
-        LocalXRINetworkGameManager gameManager = FindObjectOfType<LocalXRINetworkGameManager>();
+        LocalXRINetworkGameManager gameManager = FindFirstObjectByType<LocalXRINetworkGameManager>();
 
         if (panels == null || gameManager == null)
         {

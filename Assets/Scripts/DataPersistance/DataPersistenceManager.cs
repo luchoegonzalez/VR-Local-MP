@@ -89,7 +89,7 @@ public class DataPersistenceManager : MonoBehaviour
 
     private List<IDataPersistence> FindAllDataPersistenceObjects()
     {
-        return FindObjectsOfType<MonoBehaviour>().OfType<IDataPersistence>().ToList();
+        return FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<IDataPersistence>().ToList();
     }
 
     public List<GameData> GetGameDataList()

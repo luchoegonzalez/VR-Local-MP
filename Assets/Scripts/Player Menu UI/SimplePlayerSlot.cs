@@ -25,7 +25,7 @@ public class SimplePlayerSlot : MonoBehaviour
     public void Setup(XRINetworkPlayer player)
     {
         // m_RecenterManager = FindObjectOfType<NetworkRecenterManager>();
-        m_HMDNoise = FindObjectOfType<HMDNoise>();
+        m_HMDNoise = FindFirstObjectByType<HMDNoise>();
 
         m_Player = player;
         m_Player.onColorUpdated += UpdateColor;

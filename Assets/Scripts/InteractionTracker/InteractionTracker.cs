@@ -25,7 +25,7 @@ public class InteractionTracker : NetworkBehaviour
     private void Awake()
     {
         // Search for all the Interactables in the scene
-        m_Interactables = FindObjectsOfType<XRBaseInteractable>();
+        m_Interactables = FindObjectsByType<XRBaseInteractable>(FindObjectsSortMode.None);
         m_GameManager = LocalXRINetworkGameManager.Instance;
 
         // Starts to track the interactions when the game starts
