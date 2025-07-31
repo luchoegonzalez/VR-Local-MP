@@ -5725,6 +5725,11 @@ PrefabInstance:
       propertyPath: m_Port
       value: 47778
       objectReference: {fileID: 0}
+    - target: {fileID: 7907788802531518783, guid: f02e0053cbdeeaf4da3f2d1acda35753,
+        type: 3}
+      propertyPath: m_LogLevel
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8004364383305109882, guid: f02e0053cbdeeaf4da3f2d1acda35753,
         type: 3}
       propertyPath: ConnectionData.Port
