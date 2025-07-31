@@ -1,4 +1,5 @@
 using UnityEditor;
+using UnityEngine;
 
 [CustomEditor(typeof(RecenterTarget))]
 public class RecenterPointEditor : Editor
@@ -7,7 +8,7 @@ public class RecenterPointEditor : Editor
     {
         DrawDefaultInspector();
 
-        RecenterTarget[] recenterTargets = FindObjectsOfType<RecenterTarget>();
+        RecenterTarget[] recenterTargets = FindObjectsByType<RecenterTarget>(FindObjectsSortMode.None);
 
         EditorUtilities.CheckForDuplicateOrders(recenterTargets, target => target.GetTargetOrder().ToString(), "Recenter Target");
     }

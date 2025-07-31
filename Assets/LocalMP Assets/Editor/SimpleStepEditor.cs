@@ -1,4 +1,5 @@
 using UnityEditor;
+using UnityEngine;
 
 [CustomEditor(typeof(SimpleStep))]
 public class SimpleStepEditor : Editor
@@ -7,7 +8,7 @@ public class SimpleStepEditor : Editor
     {
         DrawDefaultInspector();
 
-        SimpleStep[] simpleSteps = FindObjectsOfType<SimpleStep>();
+        SimpleStep[] simpleSteps = FindObjectsByType<SimpleStep>(FindObjectsSortMode.None);
 
         EditorUtilities.CheckForDuplicateOrders(simpleSteps, step => step.GetStepNumber().ToString(), "Simple Step");
     }

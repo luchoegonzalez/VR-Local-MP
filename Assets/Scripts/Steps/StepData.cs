@@ -15,7 +15,7 @@ public class StepData
     [JsonProperty] private float m_TimeTaken = 0;
 
     // A Step could be completed but not succeeded !!!
-    private bool m_Succeeded = false;
+    //private bool m_Succeeded = false;
 
     [JsonProperty] private ulong m_SenderClientId = 0;
     [JsonProperty] private string completedBy = "None";
