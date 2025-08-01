@@ -6,11 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleSceneMR.unity
-    guid: 55daccc09a3b69647bbab145b54a3ab3
-  - enabled: 1
     path: Assets/Scenes/Local MR Demo.unity
     guid: aa4a9fb8ec525884787a42c43d25ca7f
+  - enabled: 1
+    path: Assets/Scenes/SampleSceneMR.unity
+    guid: 55daccc09a3b69647bbab145b54a3ab3
   - enabled: 1
     path: Assets/Scenes/LocalVRMPDemoScene.unity
     guid: b4314374ebe9f3346ab282ffef0cb984
