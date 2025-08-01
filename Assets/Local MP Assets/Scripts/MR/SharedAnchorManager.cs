@@ -19,9 +19,10 @@ public class SharedAnchorManager : NetworkBehaviour
 
     public Transform SharedAnchorTransform { get; private set; }
 
-    // Usamos FixedString en lugar de SerializableGuid para serialización
     private readonly NetworkVariable<FixedString128Bytes> sharedAnchorGroupId =
         new(writePerm: NetworkVariableWritePermission.Server);
+
+    private int readyClients = 0;
 
     private void Awake()
     {
@@ -64,16 +65,30 @@ public class SharedAnchorManager : NetworkBehaviour
         var anchor = result.value;
         SharedAnchorTransform = anchor.transform;
 
-        // 3. Compartir anchor
+        // 3. Esperar que al menos un cliente esté listo
+        Debug.Log("[SharedAnchorManager] Esperando que al menos un cliente esté listo para recibir el anchor...");
+        while (readyClients == 0)
+        {
+            await Task.Delay(2000);
+        }
+
+        // 4. Compartir anchor
         var shareResult = await anchorManager.TryShareAnchorAsync(anchor);
         if (shareResult.IsError())
         {
-            Debug.LogError("[SharedAnchorManager] Error compartiendo anchor.");
+            Debug.LogError($"[SharedAnchorManager] Error compartiendo anchor: {shareResult.statusCode}");
         }
         else
         {
             Debug.Log("[SharedAnchorManager] Anchor compartido correctamente.");
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void NotifyClientReadyToReceiveAnchorServerRpc()
+    {
+        readyClients++;
+        Debug.Log($"[SharedAnchorManager] Cliente listo para recibir anchor. Total: {readyClients}");
     }
 
     #endregion
@@ -84,7 +99,11 @@ public class SharedAnchorManager : NetworkBehaviour
     {
         yield return new WaitUntil(() => !sharedAnchorGroupId.Value.IsEmpty);
 
-        Debug.Log("[SharedAnchorManager] GroupID recibido, cargando anchor...");
+        Debug.Log("[SharedAnchorManager] GroupID recibido, notificando al host...");
+        NotifyClientReadyToReceiveAnchorServerRpc();
+
+        yield return new WaitForSeconds(1f);
+
         LoadSharedAnchor(sharedAnchorGroupId.Value.ToString());
     }
 
@@ -114,7 +133,7 @@ public class SharedAnchorManager : NetworkBehaviour
             anchorGO.transform.SetPositionAndRotation(xrAnchor.pose.position, xrAnchor.pose.rotation);
             SharedAnchorTransform = anchorGO.transform;
             Debug.Log("[SharedAnchorManager] Anchor cargado exitosamente.");
-            break; // solo uno esperado
+            break;
         }
     }
 

@@ -141,6 +141,31 @@ PrefabInstance:
       propertyPath: m_Name
       value: Permissions Manager
       objectReference: {fileID: 0}
+    - target: {fileID: 6240676003888394152, guid: 5728b3f3487602842ae4d96017b4f092,
+        type: 3}
+      propertyPath: m_PermissionGroups.Array.data[0].permissions.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6240676003888394152, guid: 5728b3f3487602842ae4d96017b4f092,
+        type: 3}
+      propertyPath: m_PermissionGroups.Array.data[0].permissions.Array.data[1].enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6240676003888394152, guid: 5728b3f3487602842ae4d96017b4f092,
+        type: 3}
+      propertyPath: m_PermissionGroups.Array.data[0].permissions.Array.data[2].enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6240676003888394152, guid: 5728b3f3487602842ae4d96017b4f092,
+        type: 3}
+      propertyPath: m_PermissionGroups.Array.data[0].permissions.Array.data[1].permissionId
+      value: com.oculus.permission.USE_ANCHOR_API
+      objectReference: {fileID: 0}
+    - target: {fileID: 6240676003888394152, guid: 5728b3f3487602842ae4d96017b4f092,
+        type: 3}
+      propertyPath: m_PermissionGroups.Array.data[0].permissions.Array.data[2].permissionId
+      value: com.oculus.permission.IMPORT_EXPORT_IOT_MAP_DATA
+      objectReference: {fileID: 0}
     - target: {fileID: 8427918671745687800, guid: 5728b3f3487602842ae4d96017b4f092,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3251,7 +3276,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorPrefab
       value: 
-      objectReference: {fileID: 6793960665798733110, guid: 326c2d95b0bb3954e98d97d14f4e8b94,
+      objectReference: {fileID: 6793960665798733110, guid: ff6d6fb3ebbc8a3449ec1e4f2d21fd55,
         type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
