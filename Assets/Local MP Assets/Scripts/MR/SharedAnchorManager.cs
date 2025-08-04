@@ -1,141 +1,120 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using TMPro;
+using Unity.Collections;
 using Unity.Netcode;
+using Unity.XR.CoreUtils.Collections;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
-using UnityEngine.XR.OpenXR.Features.Meta;
 using UnityEngine.XR.ARSubsystems;
-using Unity.Collections;
+using UnityEngine.XR.OpenXR.Features.Meta;
 
 public class SharedAnchorManager : NetworkBehaviour
 {
-    public static SharedAnchorManager Instance;
+    public ARAnchorManager anchorManager;
+    public TMP_Text debugText;
 
-    [Header("Dependencies")]
-    [SerializeField] private ARAnchorManager anchorManager;
-    [SerializeField] private Transform anchorSpawnPoint; // Posición inicial para el anchor (solo host)
+    private MetaOpenXRAnchorSubsystem metaSubsystem => (MetaOpenXRAnchorSubsystem)anchorManager.subsystem;
 
-    public Transform SharedAnchorTransform { get; private set; }
-
-    private readonly NetworkVariable<FixedString128Bytes> sharedAnchorGroupId =
+    private readonly NetworkVariable<FixedString128Bytes> sharedGroupId =
         new(writePerm: NetworkVariableWritePermission.Server);
-
-    private int readyClients = 0;
-
-    private void Awake()
-    {
-        Instance = this;
-    }
 
     public override void OnNetworkSpawn()
     {
-        if (IsClient && !IsHost)
+        if (IsServer)
         {
-            StartCoroutine(WaitAndLoadSharedAnchor());
-        }
-    }
-
-    #region HOST
-
-    public async void Host_CreateAndShareAnchor()
-    {
-        if (!IsHost)
-            return;
-
-        Debug.Log("[SharedAnchorManager] Creando anchor compartido...");
-
-        // 1. Crear y setear el Group ID
-        var groupGuid = Guid.NewGuid();
-        var groupId = new SerializableGuid(groupGuid);
-        var metaSubsystem = (MetaOpenXRAnchorSubsystem)anchorManager.subsystem;
-        metaSubsystem.sharedAnchorsGroupId = groupId;
-
-        sharedAnchorGroupId.Value = groupGuid.ToString(); // Guardamos como string
-
-        // 2. Crear el anchor en el punto indicado
-        var result = await anchorManager.TryAddAnchorAsync(new Pose(anchorSpawnPoint.position, anchorSpawnPoint.rotation));
-        if (!result.status.IsSuccess())
-        {
-            Debug.LogError("[SharedAnchorManager] Error creando anchor.");
-            return;
-        }
-
-        var anchor = result.value;
-        SharedAnchorTransform = anchor.transform;
-
-        // 3. Esperar que al menos un cliente esté listo
-        Debug.Log("[SharedAnchorManager] Esperando que al menos un cliente esté listo para recibir el anchor...");
-        while (readyClients == 0)
-        {
-            await Task.Delay(2000);
-        }
-
-        // 4. Compartir anchor
-        var shareResult = await anchorManager.TryShareAnchorAsync(anchor);
-        if (shareResult.IsError())
-        {
-            Debug.LogError($"[SharedAnchorManager] Error compartiendo anchor: {shareResult.statusCode}");
+            GenerateAndSetGroupID();
+            HostCreateAndShareAnchor();
         }
         else
         {
-            Debug.Log("[SharedAnchorManager] Anchor compartido correctamente.");
+            //TODO: separar logica de compartir
+            LoadSharedAnchors();
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void NotifyClientReadyToReceiveAnchorServerRpc()
+    private void GenerateAndSetGroupID()
     {
-        readyClients++;
-        Debug.Log($"[SharedAnchorManager] Cliente listo para recibir anchor. Total: {readyClients}");
+        var generatedGuid = Guid.NewGuid();
+        var serializableGuid = new SerializableGuid(generatedGuid);
+
+        metaSubsystem.sharedAnchorsGroupId = serializableGuid;
+        sharedGroupId.Value = generatedGuid.ToString();
+
+        Debug.Log($"[Host] Generated Shared Group ID: {generatedGuid}");
+        debugText.text = $"Shared Group ID: {generatedGuid}";
     }
 
-    #endregion
-
-    #region CLIENT
-
-    private IEnumerator WaitAndLoadSharedAnchor()
+    private void OnGroupIdChanged(FixedString128Bytes oldValue, FixedString128Bytes newValue)
     {
-        yield return new WaitUntil(() => !sharedAnchorGroupId.Value.IsEmpty);
-
-        Debug.Log("[SharedAnchorManager] GroupID recibido, notificando al host...");
-        NotifyClientReadyToReceiveAnchorServerRpc();
-
-        yield return new WaitForSeconds(1f);
-
-        LoadSharedAnchor(sharedAnchorGroupId.Value.ToString());
-    }
-
-    private async void LoadSharedAnchor(string groupIdStr)
-    {
-        if (!Guid.TryParse(groupIdStr, out Guid parsedGuid))
+        if (Guid.TryParse(newValue.ToString(), out Guid parsedGuid))
         {
-            Debug.LogError("[SharedAnchorManager] GroupID inválido.");
+            var serializableGuid = new SerializableGuid(parsedGuid);
+            metaSubsystem.sharedAnchorsGroupId = serializableGuid;
+
+            Debug.Log($"[Client] Received and set Shared Group ID: {parsedGuid}");
+            LoadSharedAnchors();
+        }
+        else
+        {
+            Debug.LogError("[Client] Failed to parse Shared Group ID");
+        }
+    }
+
+    public async void HostCreateAndShareAnchor()
+    {
+        if (!IsServer) return;
+
+        Pose pose = new Pose(anchorManager.transform.position, anchorManager.transform.rotation);
+
+        var addResult = await anchorManager.TryAddAnchorAsync(pose);
+        if (addResult.status.IsError())
+        {
+            Debug.LogError($"[Host] Failed to add anchor: {addResult.status}");
             return;
         }
 
-        var metaSubsystem = (MetaOpenXRAnchorSubsystem)anchorManager.subsystem;
-        metaSubsystem.sharedAnchorsGroupId = new SerializableGuid(parsedGuid);
+        var anchor = addResult.value;
 
+        var shareResult = await anchorManager.TryShareAnchorAsync(anchor);
+        if (shareResult.IsError())
+        {
+            debugText.text = $"Failed to share anchor: {shareResult.statusCode}";
+            Debug.LogError($"[Host] Failed to share anchor: {shareResult.statusCode}");
+        }
+        else
+        {
+            debugText.text = $"Anchor shared successfully with ID: {anchor.trackableId}";
+            Debug.Log($"[Host] Anchor shared successfully.");
+        }
+    }
+
+    private async void LoadSharedAnchors()
+    {
         var loadedAnchors = new List<XRAnchor>();
-        var result = await anchorManager.TryLoadAllSharedAnchorsAsync(loadedAnchors, null);
+
+        var result = await anchorManager.TryLoadAllSharedAnchorsAsync(
+            loadedAnchors,
+            OnIncrementalAnchorsLoaded
+        );
 
         if (result.IsError())
         {
-            Debug.LogError("[SharedAnchorManager] Error al cargar anchors.");
+            Debug.LogError($"[Client] Failed to load shared anchors: {result}");
+            debugText.text = $"Failed to load shared anchors: {result}";
             return;
         }
 
-        foreach (var xrAnchor in loadedAnchors)
-        {
-            GameObject anchorGO = new GameObject("SharedAnchor");
-            anchorGO.transform.SetPositionAndRotation(xrAnchor.pose.position, xrAnchor.pose.rotation);
-            SharedAnchorTransform = anchorGO.transform;
-            Debug.Log("[SharedAnchorManager] Anchor cargado exitosamente.");
-            break;
-        }
+        Debug.Log($"[Client] Loaded {loadedAnchors.Count} anchors from shared group.");
+        debugText.text = $"Loaded {loadedAnchors.Count} anchors from shared group.";
     }
 
-    #endregion
+    private void OnIncrementalAnchorsLoaded(ReadOnlyListSpan<XRAnchor> anchors)
+    {
+        foreach (var xrAnchor in anchors)
+        {
+            Debug.Log($"[Client] Incrementally loaded shared anchor: {xrAnchor.trackableId}");
+            // TODO: Instanciar contenido sobre el anchor
+        }
+    }
 }
