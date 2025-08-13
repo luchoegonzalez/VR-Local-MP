@@ -28,8 +28,8 @@ public class SharedAnchorManager : NetworkBehaviour
         }
         else
         {
-            //TODO: separar logica de compartir
-            LoadSharedAnchors();
+            ReceiveGroupID();
+            Invoke("LoadSharedAnchors", 3f);
         }
     }
 
@@ -43,22 +43,6 @@ public class SharedAnchorManager : NetworkBehaviour
 
         Debug.Log($"[Host] Generated Shared Group ID: {generatedGuid}");
         debugText.text = $"Shared Group ID: {generatedGuid}";
-    }
-
-    private void OnGroupIdChanged(FixedString128Bytes oldValue, FixedString128Bytes newValue)
-    {
-        if (Guid.TryParse(newValue.ToString(), out Guid parsedGuid))
-        {
-            var serializableGuid = new SerializableGuid(parsedGuid);
-            metaSubsystem.sharedAnchorsGroupId = serializableGuid;
-
-            Debug.Log($"[Client] Received and set Shared Group ID: {parsedGuid}");
-            LoadSharedAnchors();
-        }
-        else
-        {
-            Debug.LogError("[Client] Failed to parse Shared Group ID");
-        }
     }
 
     public async void HostCreateAndShareAnchor()
@@ -89,6 +73,16 @@ public class SharedAnchorManager : NetworkBehaviour
         }
     }
 
+    private void ReceiveGroupID()
+    {
+        Guid.TryParse(sharedGroupId.Value.ToString(), out Guid parsedGuid);
+        var serializableGuid = new SerializableGuid(parsedGuid);
+
+        metaSubsystem.sharedAnchorsGroupId = serializableGuid;
+
+        Debug.Log($"[Client] Received and set Shared Group ID: {parsedGuid}");
+    }
+
     private async void LoadSharedAnchors()
     {
         var loadedAnchors = new List<XRAnchor>();
@@ -113,6 +107,7 @@ public class SharedAnchorManager : NetworkBehaviour
     {
         foreach (var xrAnchor in anchors)
         {
+            var anchorId = xrAnchor.trackableId;
             Debug.Log($"[Client] Incrementally loaded shared anchor: {xrAnchor.trackableId}");
             // TODO: Instanciar contenido sobre el anchor
         }
