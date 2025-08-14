@@ -28,8 +28,8 @@ public class SharedAnchorManager : NetworkBehaviour
         }
         else
         {
-            ReceiveGroupID();
-            Invoke("LoadSharedAnchors", 3f);
+            Invoke("ReceiveGroupID", 1f);
+            Invoke("LoadSharedAnchors", 4f);
         }
     }
 
@@ -109,7 +109,6 @@ public class SharedAnchorManager : NetworkBehaviour
         {
             var anchorId = xrAnchor.trackableId;
             Debug.Log($"[Client] Incrementally loaded shared anchor: {xrAnchor.trackableId}");
-            // TODO: Instanciar contenido sobre el anchor
         }
     }
 }

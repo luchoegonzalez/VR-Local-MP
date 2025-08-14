@@ -4,13 +4,7 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Projectile
-  - Target
-  - Anchor
-  - PlayerHand
-  - Destroyer
-  - Meteor
-  - piedra
+  - SharedAnchor
   layers:
   - Default
   - TransparentFX

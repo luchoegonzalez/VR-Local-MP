@@ -336,7 +336,7 @@ GameObject:
   - component: {fileID: 1326681712631586779}
   m_Layer: 0
   m_Name: Shared ARAnchor
-  m_TagString: Untagged
+  m_TagString: SharedAnchor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
