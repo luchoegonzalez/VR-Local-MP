@@ -41,8 +41,8 @@ public class SharedAnchorManager : NetworkBehaviour
         metaSubsystem.sharedAnchorsGroupId = serializableGuid;
         sharedGroupId.Value = generatedGuid.ToString();
 
-        Debug.Log($"[Host] Generated Shared Group ID: {generatedGuid}");
-        debugText.text = $"Shared Group ID: {generatedGuid}";
+        Debug.Log($"[Host] Generated Shared Group ID: {serializableGuid.ToString()}");
+        debugText.text = $"Shared Group ID: {serializableGuid}";
     }
 
     public async void HostCreateAndShareAnchor()
@@ -68,19 +68,19 @@ public class SharedAnchorManager : NetworkBehaviour
         }
         else
         {
-            debugText.text = $"Anchor shared successfully with ID: {anchor.trackableId}";
             Debug.Log($"[Host] Anchor shared successfully.");
         }
     }
 
     private void ReceiveGroupID()
     {
-        Guid.TryParse(sharedGroupId.Value.ToString(), out Guid parsedGuid);
+        Guid parsedGuid = Guid.Parse(sharedGroupId.Value.ToString());
         var serializableGuid = new SerializableGuid(parsedGuid);
 
         metaSubsystem.sharedAnchorsGroupId = serializableGuid;
 
-        Debug.Log($"[Client] Received and set Shared Group ID: {parsedGuid}");
+        Debug.Log($"[Client] PARSED Group ID: {parsedGuid}");
+        Debug.Log($"[Client] Received and set Shared Group ID: {serializableGuid.ToString()}");
     }
 
     private async void LoadSharedAnchors()
