@@ -131,7 +131,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 150523490}
-  - component: {fileID: 150523492}
+  - component: {fileID: 150523491}
   m_Layer: 2
   m_Name: Move
   m_TagString: Untagged
@@ -154,7 +154,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 358132328}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &150523492
+--- !u!114 &150523491
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -171,7 +171,7 @@ MonoBehaviour:
   m_MoveSpeed: 1
   m_EnableStrafe: 1
   m_EnableFly: 0
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_ForwardSource: {fileID: 824810281}
   m_LeftHandMoveInput:
     m_InputSourceMode: 0
@@ -179,21 +179,21 @@ MonoBehaviour:
       m_Name: Left Hand Move
       m_Type: 0
       m_ExpectedControlType: Vector2
-      m_Id: 78b48d25-2480-46e9-a61f-581a6e2142db
+      m_Id: f5bee3d3-03c1-44af-bf9b-9cef245b1c6e
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []
       m_Flags: 0
     m_InputActionReference: {fileID: 0}
     m_ObjectReferenceObject: {fileID: 0}
-    m_ManualValue: {x: 0, y: 0}
+    m_ManualValue: {x: 1, y: 0}
   m_RightHandMoveInput:
     m_InputSourceMode: 0
     m_InputAction:
       m_Name: Right Hand Move
       m_Type: 0
       m_ExpectedControlType: Vector2
-      m_Id: 2f57a0b1-7acf-435d-a419-ebd42ab0a001
+      m_Id: c249c2a8-39d9-42a1-95dd-781506e5433c
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings: []
@@ -2931,7 +2931,7 @@ GameObject:
   - component: {fileID: 1660092922}
   - component: {fileID: 1660092921}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Canvas Debug
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
