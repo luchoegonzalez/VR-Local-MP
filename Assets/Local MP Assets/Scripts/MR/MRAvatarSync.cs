@@ -1,87 +1,148 @@
 using Unity.Netcode;
 using Unity.XR.CoreUtils;
 using UnityEngine;
-using XRMultiplayer;
 
 public class MRAvatarSync : NetworkBehaviour
 {
-    [Header("Referencia al SharedAnchor (se busca por Tag)")]
-    private Transform sharedAnchor;
+    [Header("Config")]
+    [Tooltip("Ocultar mi avatar local (ej. para no verme a mí mismo).")]
+    [SerializeField] private bool ocultarAvatarLocal = true;
 
-    [Header("XR Rig / Cabeza del jugador local")]
-    private Transform m_HeadOrigin;
-    private XROrigin m_XROrigin;
+    [Tooltip("Velocidad de suavizado para avatares remotos.")]
+    [SerializeField] private float smoothLerp = 15f;
 
-    private NetworkVariable<Vector3> posRelativa = new NetworkVariable<Vector3>(
+    // Referencias
+    private Transform sharedAnchor;        // Espacio común (mundo físico)
+    private XROrigin xrOrigin;             // Rig local
+    private Transform headLocal;           // Cámara (cabeza) local
+
+    // Poses RELATIVAS al anchor (en espacio local del anchor)
+    private NetworkVariable<Vector3> posLocalRel = new NetworkVariable<Vector3>(
         writePerm: NetworkVariableWritePermission.Owner);
-    private NetworkVariable<Quaternion> rotRelativa = new NetworkVariable<Quaternion>(
+    private NetworkVariable<Quaternion> rotLocalRel = new NetworkVariable<Quaternion>(
         writePerm: NetworkVariableWritePermission.Owner);
 
-    void Start()
+    void Awake()
     {
-
+        // Buscar XR Origin (solo local lo usará de verdad, pero el warning de parenting corre para todos)
+        xrOrigin = FindFirstObjectByType<XROrigin>();
     }
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        if (IsOwner)
+
+        // TODOS los objetos (owner y no-owner) deben conocer el anchor
+        TryFindSharedAnchor();
+
+        // Si soy el dueño, consigo mi cabeza local
+        if (IsOwner && xrOrigin != null && xrOrigin.Camera != null)
         {
-            XRINetworkGameManager.Instance.LocalPlayerConnected(NetworkObject.OwnerClientId);
-
-            m_XROrigin = FindFirstObjectByType<XROrigin>();
-            if (m_XROrigin != null)
+            headLocal = xrOrigin.Camera.transform;
+            if (ocultarAvatarLocal)
             {
-                Utils.Log("XR Rig Available");
-                m_HeadOrigin = m_XROrigin.Camera.transform;
+                // Si tu avatar tiene renderers, podés ocultarlos acá
+                ToggleRenderers(false);
             }
-            else
-            {
-                Utils.Log("No XR Rig Available", 1);
-            }
+        }
 
-            Invoke("FindSharedAnchor", 10f);
+        // Parentar el avatar bajo el anchor (clave para que el recenter no afecte)
+        TryParentUnderAnchor();
+
+        // Chequeo de seguridad: el anchor NO debe ser hijo del XROrigin
+        if (xrOrigin && sharedAnchor && sharedAnchor.IsChildOf(xrOrigin.transform))
+        {
+            Debug.LogWarning("[MRAvatarSync] El SharedAnchor NO debe ser hijo del XROrigin. " +
+                             "Movelo a la raíz de la escena u otro root independiente.");
         }
     }
 
     void Update()
     {
-        if (sharedAnchor == null) return;
+        if (sharedAnchor == null)
+        {
+            // Reintentar si el anchor apareció más tarde
+            TryFindSharedAnchor();
+            TryParentUnderAnchor();
+            if (sharedAnchor == null) return;
+        }
 
         if (IsOwner)
         {
-            // Calcular posición y rotación relativas al anchor
-            Vector3 relPos = sharedAnchor.InverseTransformPoint(m_HeadOrigin.position);
-            Quaternion relRot = Quaternion.Inverse(sharedAnchor.rotation) * m_HeadOrigin.rotation;
+            if (headLocal == null)
+            {
+                // Intentar reparar si la cámara no estaba lista
+                if (xrOrigin != null && xrOrigin.Camera != null)
+                    headLocal = xrOrigin.Camera.transform;
+                if (headLocal == null) return;
+            }
 
-            // Guardar en las variables de red
-            posRelativa.Value = relPos;
-            rotRelativa.Value = relRot;
+            // 1) Calcular pose RELATIVA al anchor
+            Vector3 relPos = sharedAnchor.InverseTransformPoint(headLocal.position);
+            Quaternion relRot = Quaternion.Inverse(sharedAnchor.rotation) * headLocal.rotation;
 
-            // Opcional: el avatar local copia la posición de la cabeza XR (no te ves a vos mismo si ocultás el modelo)
-            transform.position = m_HeadOrigin.position;
-            transform.rotation = m_HeadOrigin.rotation;
+            // 2) Publicarla por red
+            posLocalRel.Value = relPos;
+            rotLocalRel.Value = relRot;
+
+            // 3) (Opcional) También posicionar mi avatar local en el espacio del anchor
+            //    Esto mantiene consistencia visual si decidís mostrarte a vos mismo.
+            transform.localPosition = relPos;
+            transform.localRotation = relRot;
         }
         else
         {
-            // Reconstruir posición absoluta desde la data recibida
-            Vector3 absPos = sharedAnchor.TransformPoint(posRelativa.Value);
-            Quaternion absRot = sharedAnchor.rotation * rotRelativa.Value;
+            // Reconstrucción en el otro extremo: usamos directamente localPosition/localRotation
+            // porque el avatar es hijo del anchor (espacio del anchor)
+            Vector3 targetPos = posLocalRel.Value;
+            Quaternion targetRot = rotLocalRel.Value;
 
-            transform.position = absPos;
-            transform.rotation = absRot;
+            // Suavizado para evitar jitter/teleports breves
+            transform.localPosition = Vector3.Lerp(transform.localPosition, targetPos, Time.deltaTime * smoothLerp);
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRot, Time.deltaTime * smoothLerp);
         }
     }
 
-    void FindSharedAnchor()
+    // ----------------------------- Helpers -----------------------------
+
+    private void TryFindSharedAnchor()
     {
-        if (sharedAnchor == null)
+        if (sharedAnchor != null) return;
+
+        GameObject anchorObj = GameObject.FindGameObjectWithTag("SharedAnchor");
+        if (anchorObj != null)
         {
-            GameObject anchorObj = GameObject.FindGameObjectWithTag("SharedAnchor");
-            if (anchorObj != null)
-                sharedAnchor = anchorObj.transform;
-            else
-                Debug.LogError("No se encontró un objeto con el Tag 'SharedAnchor' en la escena.");
+            sharedAnchor = anchorObj.transform;
         }
+        else
+        {
+            // No lo spamee cada frame, pero dejá una pista en consola
+            // Debug.Log("[MRAvatarSync] Aún no encuentro objeto con tag 'SharedAnchor'.");
+        }
+    }
+
+    private void TryParentUnderAnchor()
+    {
+        if (sharedAnchor == null) return;
+
+        if (transform.parent != sharedAnchor)
+        {
+            // Guardar pose global actual
+            Vector3 worldPos = transform.position;
+            Quaternion worldRot = transform.rotation;
+
+            // Parentar bajo anchor space
+            transform.SetParent(sharedAnchor, worldPositionStays: true);
+
+            // Reaplicar para quedar en el mismo lugar global y que la local quede correctamente relativa
+            transform.position = worldPos;
+            transform.rotation = worldRot;
+        }
+    }
+
+    private void ToggleRenderers(bool enabled)
+    {
+        var rends = GetComponentsInChildren<Renderer>(true);
+        foreach (var r in rends) r.enabled = enabled;
     }
 }

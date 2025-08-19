@@ -423,8 +423,8 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
+  SyncOwnerTransformWhenParented: 0
+  AllowOwnerToParent: 1
 --- !u!114 &4950753110966121755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -618,6 +618,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  ocultarAvatarLocal: 0
+  smoothLerp: 15
 --- !u!1 &5908336471056132768
 GameObject:
   m_ObjectHideFlags: 0
